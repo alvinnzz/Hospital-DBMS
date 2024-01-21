@@ -1,0 +1,44 @@
+CREATE TABLE IF NOT EXISTS Patient (
+    PatientID INT PRIMARY KEY,
+    FirstName VARCHAR(50) NOT NULL,
+    LastName VARCHAR(50) NOT NULL,
+    Gender ENUM('M', 'F') NOT NULL,
+    DateOfBirth DATE NOT NULL,
+    ContactNumber VARCHAR(15) NOT NULL,
+    Address VARCHAR(255) NOT NULL
+);
+CREATE TABLE IF NOT EXISTS Doctor (
+    DoctorID INT PRIMARY KEY,
+    FirstName VARCHAR(50) NOT NULL,
+    LastName VARCHAR(50) NOT NULL,
+    Specialization VARCHAR(50),
+    ContactNumber VARCHAR(15) NOT NULL
+);
+CREATE TABLE IF NOT EXISTS Appointment (
+    AppointmentID INT PRIMARY KEY,
+    PatientID INT NOT NULL,
+    DoctorID INT NOT NULL,
+    AppointmentDate DATE NOT NULL,
+    AppointmentTime TIME NOT NULL,
+    FOREIGN KEY (PatientID) REFERENCES Patient(PatientID),
+    FOREIGN KEY (DoctorID) REFERENCES Doctor(DoctorID)
+);
+CREATE TABLE IF NOT EXISTS MedicalRecord (
+    RecordID INT PRIMARY KEY,
+    AppointmentID INT NOT NULL,
+    Date DATE NOT NULL,
+    Diagnosis TEXT,
+    Prescription TEXT,
+    FOREIGN KEY (AppointmentID) REFERENCES Appointment(AppointmentID)
+);
+CREATE TABLE IF NOT EXISTS Bill (
+    BillID INT PRIMARY KEY,
+    PatientID INT NOT NULL,
+    BillDate DATE NOT NULL,
+    TotalAmount DECIMAL(10, 2) NOT NULL DEFAULT 0,
+    isPaid BOOLEAN NOT NULL,
+    FOREIGN KEY (PatientID) REFERENCES Patient(PatientID)
+);
+
+
+
