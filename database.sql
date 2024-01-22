@@ -40,5 +40,26 @@ CREATE TABLE IF NOT EXISTS Bill (
     FOREIGN KEY (PatientID) REFERENCES Patient(PatientID)
 );
 
+--HELP PATIENTS TO VIEW UNPAID BILLS
+CREATE PROCEDURE PatientUnpaidBills(IN targetPatient INT)
+BEGIN
+    SELECT b.BillID, b.BillDate, b.TotalAmount, b.isPaid
+    FROM Bill b
+    WHERE b.PatientID = targetPatient AND isPaid = FALSE;
+END;
 
+--HELP DOCTORS TO CHECK THEIR UPCOMING APPOINTMENTS FOR THE DAY
+CREATE PROCEDURE DoctorAppointmentsByDay(IN targetDoctor INT, IN targetDate DATE)
+BEGIN
+    SELECT a.AppointmentID, a.PatientID, a.AppointmentTime
+    FROM Appointment a 
+    WHERE a.DoctorID = targetDoctor AND a.AppointmentDate = targetDate;
+END;
 
+--HELP PATIENTS TO VIEW THEIR FUTURE APPOINTMENTS, ALSO CHECK WHICH DOCTOR THEY ARE SEEING
+CREATE PROCEDURE PatientUpcomingAppointments(IN targetPatient INT)
+BEGIN
+    SELECT a.AppointmentID, a.DoctorID, a.AppointmentDate, a.AppointmentTime
+    FROM Appointment a 
+    WHERE a.PatientID = targetPatient AND a.AppointmentDate >= CURDATE();
+END;
